@@ -27,7 +27,7 @@ extension GameManager: BoardInteractionDelegate {
             print("Move")
         case .addPath:
             if !isCollision {
-                boardView.replaceTile(row: row, col: col, newTile: PathTile(frame: .zero))
+                boardView.replaceTile(row: row, col: col, newTile: PathTile(frame: .zero, row: row, col: col))
             }
         case .addCoaster:
             if !(coaster?.hasAnchorTileBeenSet ?? false) && !isCollision {

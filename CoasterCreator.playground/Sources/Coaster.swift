@@ -41,7 +41,6 @@ class Coaster: NSObject {
         tracks.append(firstTile)
         nextCoasterTileRow = row
         nextCoasterTileCol = col + 1
-        print("next is \(nextCoasterTileRow) \(nextCoasterTileCol)")
     }
     
     // MARK: Erasing
@@ -63,7 +62,6 @@ class Coaster: NSObject {
         guard let first = tracks.first else {
             return
         }
-        print("ADDCAR")
         
         car.frame = first.frame
         boardView.addSubview(car)
@@ -227,7 +225,6 @@ class Coaster: NSObject {
             completionHandler?(self)
             addCar()
         }
-        print("next is \(nextCoasterTileRow) \(nextCoasterTileCol)")
     }
     
     // Adding Pieces

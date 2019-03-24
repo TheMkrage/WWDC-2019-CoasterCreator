@@ -83,7 +83,6 @@ public class CoasterToolbar: UIView {
     }
     
     func selectButton(button: UIImageView) {
-        print(button.frame)
         let shadowPath = UIBezierPath(rect: button.bounds)
         button.layer.masksToBounds = false
         button.layer.shadowColor = UIColor.yellow.cgColor
