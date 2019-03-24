@@ -7,8 +7,12 @@ enum TrackDirection {
 class Coaster: NSObject {
     private var boardView: BoardView
     
+    // run once the coaster is completed
+    var completionHandler: ((Coaster) -> Void)?
+    
     private var tracks = [TrackTile]()
     var timePerTrack = 0.25
+    var car = UIImageView(image: UIImage.init(named: "Coaster-Car"))
     
     var nextCoasterTileCol = 0
     var nextCoasterTileRow = 0
@@ -40,6 +44,20 @@ class Coaster: NSObject {
         print("next is \(nextCoasterTileRow) \(nextCoasterTileCol)")
     }
     
+    // MARK: Erasing
+    func erase() {
+        car.removeFromSuperview()
+        for track in tracks {
+            boardView.eraseTile(row: track.row, col: track.col)
+        }
+    }
+    
+    func containsTile(tile: TrackTile) -> Bool {
+        return self.tracks.contains(where: { (t) -> Bool in
+            return t.col == tile.col && t.row == tile.row
+        })
+    }
+    
     // MARK: Coaster Car
     func addCar() {
         guard let first = tracks.first else {
@@ -47,12 +65,10 @@ class Coaster: NSObject {
         }
         print("ADDCAR")
         
-        let car = UIImageView(image: UIImage.init(named: "Coaster-Car"))
         car.frame = first.frame
         boardView.addSubview(car)
         
         CATransaction.begin()
-        CATransaction.setAnimationDuration(5.0)
         
         let pathAndKeyFrames = generateCarPath()
         let totalTime = Double(tracks.count) * timePerTrack
@@ -61,12 +77,13 @@ class Coaster: NSObject {
         spinAnimation.values = pathAndKeyFrames.2
         spinAnimation.keyTimes = pathAndKeyFrames.1
         spinAnimation.duration = totalTime
-        
+        spinAnimation.repeatCount = .infinity
         car.layer.add(spinAnimation, forKey: "spin")
         
         let animation = CAKeyframeAnimation(keyPath: "position")
         animation.duration = totalTime
         animation.path = pathAndKeyFrames.0.cgPath
+        animation.repeatCount = .infinity
         car.layer.add(animation, forKey: "move")
         
         CATransaction.commit()
@@ -207,6 +224,7 @@ class Coaster: NSObject {
             return
         }
         if first.row == nextCoasterTileRow && first.col == nextCoasterTileCol {
+            completionHandler?(self)
             addCar()
         }
         print("next is \(nextCoasterTileRow) \(nextCoasterTileCol)")

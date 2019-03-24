@@ -12,6 +12,7 @@ public class GameManager: NSObject {
     var state: State = .move
     
     var coaster: Coaster?
+    var completeCoasters = [Coaster]()
     
     public init(boardView: BoardView, bottomBar: BottomBar) {
         self.bottomBar = bottomBar
@@ -36,7 +37,34 @@ extension GameManager: BoardInteractionDelegate {
                     return
                 }
                 coaster = Coaster(boardView: boardView, row: row, col: col)
+                coaster?.completionHandler = { (coaster) -> Void in
+                    self.completeCoasters.append(coaster)
+                    self.coaster = nil
+                    self.bottomBar.mainToolbar.movePressed()
+                }
                 bottomBar.label.text = "Use the below buttons to place track!"
+            }
+        case .erase:
+            let tile = boardView.tiles[col][row]
+            if let track = tile as? TrackTile {
+                // if trying to erase a coaster, erase all of its tiles
+                // first check the coaster under construction
+                if let coaster = self.coaster, coaster.containsTile(tile: track) {
+                    coaster.erase()
+                    self.coaster = nil
+                    return
+                }
+                var i = 0
+                for coaster in self.completeCoasters {
+                    if coaster.containsTile(tile: track) {
+                        coaster.erase()
+                        self.completeCoasters.remove(at: i)
+                        return
+                    }
+                    i += 1
+                }
+            } else {
+                boardView.eraseTile(row: row, col: col)
             }
         default:
             print("everything else")

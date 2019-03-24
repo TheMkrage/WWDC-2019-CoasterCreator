@@ -15,6 +15,7 @@ public class MainToolbar: UIView {
     var moveButton: UIImageView!
     var addPathButton: UIImageView!
     var addCoasterButton: UIImageView!
+    var eraseButton: UIImageView!
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,9 +43,16 @@ public class MainToolbar: UIView {
         addCoasterButton.isUserInteractionEnabled = true
         addCoasterButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addCoasterPressed)))
         
+        eraseButton = UIImageView(image: UIImage.init(named: "Erase"))
+        eraseButton.contentMode = .center
+        eraseButton.frame = CGRect(x: 120, y: 0, width: 40, height: 70)
+        eraseButton.isUserInteractionEnabled = true
+        eraseButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(erasePressed)))
+        
         addSubview(moveButton)
         addSubview(addPathButton)
         addSubview(addCoasterButton)
+        addSubview(eraseButton)
     }
     
     @objc func movePressed() {
@@ -65,10 +73,17 @@ public class MainToolbar: UIView {
         delegate?.addCoasterPressed()
     }
     
+    @objc func erasePressed() {
+        clearSelection()
+        selectButton(button: eraseButton)
+        delegate?.erasePressed()
+    }
+    
     func clearSelection() {
         clearSelection(button: moveButton)
         clearSelection(button: addPathButton)
         clearSelection(button: addCoasterButton)
+        clearSelection(button: eraseButton)
     }
     
     func selectButton(button: UIImageView) {
