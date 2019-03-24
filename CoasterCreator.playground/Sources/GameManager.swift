@@ -24,7 +24,7 @@ extension GameManager: BoardInteractionDelegate {
     public func tileTapped(row: Int, col: Int, isCollision: Bool) {
         switch state {
         case .move:
-            print("MOVINGN")
+            print("Move")
         case .addPath:
             if !isCollision {
                 boardView.replaceTile(row: row, col: col, newTile: PathTile(frame: .zero))
@@ -76,11 +76,13 @@ extension GameManager: MainToolerbarDelegate {
     public func movePressed() {
         state = .move
         bottomBar.hideSubBar()
+        bottomBar.label.text = "Click and Drag to Pan your View"
     }
     
     public func addPathPressed() {
         state = .addPath
         bottomBar.hideSubBar()
+        bottomBar.label.text = "Tap to Place down Path. People will walk here"
     }
     
     public func addCoasterPressed() {
@@ -98,5 +100,6 @@ extension GameManager: MainToolerbarDelegate {
     public func erasePressed() {
         state = .erase
         bottomBar.hideSubBar()
+        bottomBar.label.text = "Tap to Erase"
     }
 }

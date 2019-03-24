@@ -31,10 +31,18 @@ public class BoardView: UIView {
                 let tileY = tileHeight * CGFloat(row)
                 
                 let tileFrame = CGRect(x: tileX, y: tileY, width: tileWidth, height: tileHeight)
-                let tile = TileView(frame: tileFrame, texture: UIImage(named: "Grass"))
+                let number = Int.random(in: 0 ..< 10)
+                let name = number > 7 ? "Grass-01" : "Grass"
+                let tile = TileView(frame: tileFrame, texture: UIImage(named: name))
                 addSubview(tile)
                 tiles[col][row] = tile
             }
+        }
+        
+        // Build starting path
+        for x in 0..<10 {
+            replaceTile(row: 7, col: x, newTile: PathTile(frame: .zero))
+            replaceTile(row: 8, col: x, newTile: PathTile(frame: .zero))
         }
     }
     
@@ -57,7 +65,7 @@ public class BoardView: UIView {
     public func doesTileHaveCollision(row: Int, col: Int) -> Bool {
         let tile = tiles[col][row]
         
-        return tile.image != UIImage(named: "Grass")
+        return tile.image != UIImage(named: "Grass") && tile.image != UIImage(named: "Grass-01")
     }
     
     func replaceTile(row: Int, col: Int, newTile: TileView) {
