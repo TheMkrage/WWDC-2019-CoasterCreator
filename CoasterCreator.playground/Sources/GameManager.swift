@@ -89,7 +89,11 @@ extension GameManager: MainToolerbarDelegate {
         state = .addCoaster
         bottomBar.hideSubBar()
         bottomBar.showCoasterBar()
-        bottomBar.label.text = "Tap anywhere to start the coaster"
+        if coaster == nil {
+            bottomBar.label.text = "Tap anywhere to start the coaster"
+        } else {
+            bottomBar.label.text = "Finish your coaster with the coaster toolbar"
+        }
     }
     
     public func addFlatRidePressed() {

@@ -75,7 +75,9 @@ public class BoardView: UIView {
     }
     
     public func doesTileHaveCollision(row: Int, col: Int) -> Bool {
-        let tile = tiles[col][row]
+        guard let tile = getTile(row: row, col: col) else {
+            return true
+        }
         
         return tile.image != UIImage(named: "Grass") && tile.image != UIImage(named: "Grass-01")
     }
